@@ -5,7 +5,6 @@ service:
   interval: 300 # 5分毎にチェック
   bot_name: feed
   channels:
-    '#fse':
+    '#haiku':
       feeds:
-        - uri: http://www.douzemille.net/labs/urlstack/rss.cgi
-
+        - uri: http://h.hatena.ne.jp/wakabatan/following.rss
