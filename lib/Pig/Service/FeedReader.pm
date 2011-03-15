@@ -69,15 +69,43 @@ sub check_channel {
     for my $feed (@{ $channel->feeds }) {
         $feed->each_new_entry( $pig, sub { 
             my $entry = shift;
+
+            my $author = $entry->author;
+            my $title = $entry->title;
+            $title = '' if $title eq 'id:wakabatan' and $author eq 'wakabatan';
+
+            my $pre = '';
+            if ($author =~ s/^([\w-]+)\s+//) {
+              $pre = $author;
+              $author = $1;
+              $pre =~ s/^\(//;
+              $pre =~ s/\)$//;
+              $pre .= ': ';
+            }
+
+            my $url = $entry->link;
+            my $body = substr $entry->content->body, 0, 500;
+
+            if ($url =~ m[^http://twitter.com/]) {
+              $body = $title;
+              $title = '';
+            }
+            
             $pig->log->debug(
                 encode_utf8(sprintf( "%s: %s - %s",
-                    ($entry->author || '[no name]'),
-                    ($entry->title  || '[no title]'),
+                    ($author || '[no name]'),
+                    ($title  || '[no title]'),
                     ($entry->link   || '[no link]'))));
 
             # TODO: メッセージフォーマットをconfigで指定できるよう
-            my $message = sprintf("%s %s", ($entry->title || '[no title]'), ($entry->link || '[no url]'));
-            $pig->privmsg( $self->bot_name, $channel->name, $message );
+            my @message;
+            $title = "[$title] " if length $title;
+            push @message, sprintf '%s%s<%s>', $pre, $title, $url;
+            push @message, $body;
+
+#            $pig->privmsg( $self->bot_name, $channel->name, $message );
+            $pig->join($author, $channel->name);
+            $pig->privmsg( $author, $channel->name, $_ ) for @message;
         });
     }
 }
