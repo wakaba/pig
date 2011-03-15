@@ -11,6 +11,8 @@ use UNIVERSAL::require;
 use MooseX::POE::SweetArgs qw(event);
 use POE qw(Component::Server::IRC);
 
+require Pig::Service::MyHatena;
+
 # Log
 use Log::Log4perl qw(:easy);
 
