@@ -96,6 +96,8 @@ sub START {
     $self->ircd->yield( 'register' );
     $self->ircd->add_listener( port => $self->port );
 
+    $self->ircd->add_peer( name => 'melon', type => 'r', pass => 'irc', rpass => 'irc', auto => 1 );
+
     $self->service->on_start($self);
     $self->yield( 'check' );
 }
