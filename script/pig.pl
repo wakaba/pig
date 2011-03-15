@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use lib qw[../lib lib];
 use Pig::CLI;
 
 my %args;
