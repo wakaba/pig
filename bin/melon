@@ -1,0 +1,2 @@
+#!/bin/sh
+exec perl bin/pig.pl config/feed_reader.yaml
